@@ -122,8 +122,8 @@
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Mouse.cpp" />
+    <ClCompile Include="shader.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="ShaderProgram.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DetailedException.h" />
@@ -131,8 +131,8 @@
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Mouse.h" />
+    <ClInclude Include="shader.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="ShaderProgram.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg" />

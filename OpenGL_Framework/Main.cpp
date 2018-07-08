@@ -28,7 +28,6 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "MainWindow.h"
-#include "ShaderProgram.h"
 #include "DetailedException.h"
 #include "Texture.h"
 #include "Game.h"

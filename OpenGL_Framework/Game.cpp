@@ -1,6 +1,8 @@
 #include <iostream>
+#include <memory>
 
 #include "Game.h"
+#include "shader.h"
 
 using glm::mat4;
 using glm::vec4;
@@ -32,14 +34,18 @@ Game::Game(Keyboard& kbd, Mouse& a_mouse)
 
 glm::vec3 cameraPos, cameraFront, cameraUp;
 
+static ShaderProgram sprogram;
+
 void Game::setup()
 {
 	cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 	cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 	cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
-
-	shaderProgram.makeProgram("VS_math.glsl", "FS_math.glsl");
+	sprogram.setVertexShader(std::make_shared<VertexShader>("shaders/VS_math.glsl"));
+	sprogram.setFragmentShader(std::make_shared<FragmentShader>("shaders/FS_math.glsl"));
+	sprogram.compile();
+	
 	img1.loadImage("container.jpg");
 	img2.loadImage("awesomeface.png");
 	img3.loadImage("wall.jpg");
@@ -155,16 +161,16 @@ GLfloat fov = 45.0;
 void Game::draw()
 {
 	// activate shader program
-	shaderProgram.use();
+	sprogram.setActive();
 
 	GLfloat currentFrame = glfwGetTime();
 	deltaTime = currentFrame - lastFrame;
 	lastFrame = currentFrame;
 
 	//lookup uniforms
-	GLuint model_loc = glGetUniformLocation(shaderProgram.getProgramID(), "model");
-	GLuint view_loc = glGetUniformLocation(shaderProgram.getProgramID(), "view");
-	GLuint proj_loc = glGetUniformLocation(shaderProgram.getProgramID(), "proj");
+	GLuint model_loc = glGetUniformLocation(sprogram.m_program_id, "model"); // HACK
+	GLuint view_loc = glGetUniformLocation(sprogram.m_program_id, "view");
+	GLuint proj_loc = glGetUniformLocation(sprogram.m_program_id, "proj");
 
 	mat4 view, proj;
 	GLfloat radius = 10.0f;
@@ -211,10 +217,10 @@ void Game::draw()
 	glUniformMatrix4fv(proj_loc, 1, GL_FALSE, glm::value_ptr(proj));
 
 	img1.bind();
-	glUniform1i(glGetUniformLocation(shaderProgram.getProgramID(), "ourTexture1"), 0);
+	glUniform1i(glGetUniformLocation(sprogram.m_program_id, "ourTexture1"), 0);
 
 	img2.bind();
-	glUniform1i(glGetUniformLocation(shaderProgram.getProgramID(), "ourTexture2"), 1);
+	glUniform1i(glGetUniformLocation(sprogram.m_program_id, "ourTexture2"), 1);
 
 	glBindVertexArray(VAO);
 	for (GLuint i = 0; i < 10; i++)
